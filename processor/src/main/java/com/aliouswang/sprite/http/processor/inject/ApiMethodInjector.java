@@ -59,7 +59,6 @@ public class ApiMethodInjector {
             case VOID:
                 sb.append("void ");
                 break;
-                break;
             default: throw new Exception("other types are not supported");
         }
 
@@ -106,6 +105,28 @@ public class ApiMethodInjector {
             String name = parameter.getKey();
 
         }
+
+        sb.append("OkHttpClient client = new OkHttpClient();\n" +
+                "\n" +
+                "        Request request = new Request.Builder()\n" +
+                "                .url(\"http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do\")\n" +
+                "                .build();\n" +
+                "\n" +
+                "        client.newCall(request).enqueue(new Callback() {\n" +
+                "            @Override\n" +
+                "            public void onFailure(Request request, IOException e) {\n" +
+                "                e.printStackTrace();\n" +
+                "            }\n" +
+                "\n" +
+                "            @Override\n" +
+                "            public void onResponse(Response response) throws IOException {\n" +
+                "                if (!response.isSuccessful()) {\n" +
+                "                    throw new IOException(\"Unexpected code \" + response);\n" +
+                "                }\n" +
+                "\n" +
+                "                Log.e(\"sprite\", response.body().string());\n" +
+                "            }\n" +
+                "        });");
 
         return sb.toString();
     }
