@@ -7,6 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.aliouswang.http.sprite.api.UserApi;
+import com.aliouswang.sprite.http.processor.annotation.InjectFactory;
+
 import java.io.IOException;
 
 import okhttp3.Callback;
@@ -41,26 +44,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void doHttpReqeust() throws Exception{
 
-        OkHttpClient client = new OkHttpClient();
+        UserApi api = InjectFactory.inject(UserApi.class);
+        api.login("geminiwen", "password");
 
-        Request request = new Request.Builder()
-                .url("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do")
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
-                }
-
-                Log.e("sprite", response.body().string());
-            }
-        });
+//        OkHttpClient client = new OkHttpClient();
+//
+//        Request request = new Request.Builder()
+//                .url("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do")
+//                .build();
+//
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Request request, IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(Response response) throws IOException {
+//                if (!response.isSuccessful()) {
+//                    throw new IOException("Unexpected code " + response);
+//                }
+//
+//                Log.e("sprite", response.body().string());
+//            }
+//        });
     }
 }
