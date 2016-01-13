@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.alibaba.fastjson.JSON;
+import com.aliouswang.http.sprite.model.Pojo;
 import com.aliouswang.sprite.http.library.HttpTask;
 
 import java.io.IOException;
@@ -51,21 +53,27 @@ public class MainActivity extends AppCompatActivity {
         header.put("user_id", 123);
         header.put("pageSize", "1");
         HttpTask.getInstance().
-                syncGet("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do", header, new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Log.e("sprite", e.toString());
-            }
+                syncPost("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do", header, header, new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        Log.e("sprite", e.toString());
+                    }
 
-            @Override
-            public void onResponse(Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
-                }
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        if (!response.isSuccessful()) {
+                            throw new IOException("Unexpected code " + response);
+                        }
 
-                Log.e("sprite", response.body().string());
-            }
-        });
+//                        Log.e("sprite", response.body().string());
+
+                        String jsonString = response.body().string();
+                        Pojo pojo = JSON.parseObject(jsonString, Pojo.class);
+                        if (pojo == null) {
+
+                        }
+                    }
+                });
 
 //        OkHttpClient client = new OkHttpClient();
 //
