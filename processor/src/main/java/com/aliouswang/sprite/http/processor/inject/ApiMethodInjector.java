@@ -2,7 +2,6 @@ package com.aliouswang.sprite.http.processor.inject;
 
 import com.aliouswang.sprite.http.processor.annotation.Name;
 import com.aliouswang.sprite.http.processor.annotation.POST;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -58,7 +57,6 @@ public class ApiMethodInjector {
         switch (returnTypeKind) {
             case VOID:
                 sb.append("void ");
-                break;
                 break;
             default: throw new Exception("other types are not supported");
         }
