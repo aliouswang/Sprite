@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.Set;
 
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
 
 /**
  * Created by Administrator on 2016/1/12 0012.
@@ -92,6 +94,48 @@ public class HttpTask {
         Request request = builder.build();
         getHttpClientInstance().newCall(request).enqueue(callback);
     }
+
+    public void syncPost(String url, Map<String, Object> params, Callback callback) {
+        syncPost(url, null, params, callback);
+    }
+
+    public void syncPost(String url, Map<String, Object> headerMap, Map<String, Object> params ,Callback callback) {
+        Request.Builder builder = new Request.Builder()
+                .url(url);
+        if (headerMap != null && !headerMap.isEmpty()) {
+            Set<String> headerKey = headerMap.keySet();
+            for(String key : headerKey) {
+                builder.addHeader(key, headerMap.get(key).toString());
+            }
+        }
+
+        FormBody.Builder formBody = new FormBody.Builder();
+        if (params != null && !params.isEmpty()) {
+            Set<String> paramKey = params.keySet();
+            for (String key : paramKey) {
+                formBody.add(key, params.get(key).toString());
+            }
+        }
+        RequestBody requestBody = formBody.build();
+
+        Request request = builder
+                .post(requestBody)
+                .build();
+        try {
+            Response response = getHttpClientInstance().newCall(request).execute();
+            if (response.isSuccessful()) {
+                callback.onResponse(response);
+            }else {
+                callback.onFailure(request, new IOException(response.body().string()));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            callback.onFailure(request, new IOException(e.toString()));
+        }
+
+    }
+
+
 
     public void uploadFile(String url, File file) throws FileNotFoundException, IOException{
         MediaType mediaType = MediaType.parse("multipart/form-data; charset=utf-8");
