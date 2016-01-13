@@ -7,13 +7,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import com.aliouswang.http.sprite.api.UserApi;
-import com.aliouswang.sprite.http.processor.annotation.InjectFactory;
+import com.aliouswang.sprite.http.library.HttpTask;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -31,21 +31,41 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                try {
-                    doHttpReqeust();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            doHttpReqeust();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
         });
-
-
     }
 
     public void doHttpReqeust() throws Exception{
 
-        UserApi api = InjectFactory.inject(UserApi.class);
-        api.login("geminiwen", "password");
+        Map<String, Object> header = new HashMap<>();
+        header.put("user_id", 123);
+        header.put("pageSize", "1");
+        HttpTask.getInstance().
+                syncGet("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do", header, new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.e("sprite", e.toString());
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+
+                Log.e("sprite", response.body().string());
+            }
+        });
 
 //        OkHttpClient client = new OkHttpClient();
 //

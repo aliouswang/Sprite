@@ -27,4 +27,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.0.0-RC1'
     compile 'com.squareup.okio:okio:1.6.0'
+
+    compile 'com.facebook.stetho:stetho:1.2.0'
+    compile 'com.facebook.stetho:stetho-okhttp:1.2.0'
 }
