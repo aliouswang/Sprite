@@ -1,12 +1,16 @@
 package com.aliouswang.sprite.http.library;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -73,10 +77,42 @@ public class HttpTask {
     }
 
     public void asyncGet(String url, Callback callback) {
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+        asyncGet(url, null, callback);
+    }
+
+    public void asyncGet(String url, Map<String, Object> headerMap, Callback callback) {
+        Request.Builder builder = new Request.Builder()
+                .url(url);
+        if (headerMap != null && !headerMap.isEmpty()) {
+            Set<String> headerKey = headerMap.keySet();
+            for(String key : headerKey) {
+                builder.addHeader(key, headerMap.get(key).toString());
+            }
+        }
+        Request request = builder.build();
         getHttpClientInstance().newCall(request).enqueue(callback);
     }
+
+    public void uploadFile(String url, File file) throws FileNotFoundException, IOException{
+        MediaType mediaType = MediaType.parse("multipart/form-data; charset=utf-8");
+        if (file != null) {
+            throw new FileNotFoundException("File can't be null!");
+        }
+        Request request = new Request.Builder()
+                .url(url)
+                .post(RequestBody.create(mediaType, file))
+                .build();
+        Response response = getHttpClientInstance().newCall(request).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("Uxcepted code " + response);
+        }
+    }
+
+
+
+
+
+
+
 
 }
