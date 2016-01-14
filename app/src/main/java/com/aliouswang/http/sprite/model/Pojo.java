@@ -6,5 +6,6 @@ package com.aliouswang.http.sprite.model;
 public class Pojo {
 
     public InfoMap infoMap;
+    public String username;
 
 }

@@ -1,10 +1,14 @@
 package com.aliouswang.sprite.http.library;
 
+import com.aliouswang.sprite.http.library.ssl.DefaultSSLProtocolSocketFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
+
+import javax.net.ssl.SSLContext;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -15,22 +19,22 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by Administrator on 2016/1/12 0012.
+ * Created by aliouswang on 16/1/14.
  */
-public class HttpTask {
+public class HttpsTask {
 
     private volatile static OkHttpClient httpClient;
-    private volatile static HttpTask httpTask;
+    private volatile static HttpsTask httpTask;
 
-    private HttpTask() {
+    private HttpsTask() {
 
     }
 
-    public static HttpTask getInstance() {
+    public static HttpsTask getInstance() {
         if (httpTask == null) {
-            synchronized (HttpTask.class) {
+            synchronized (HttpsTask.class) {
                 if (httpTask == null) {
-                    httpTask = new HttpTask();
+                    httpTask = new HttpsTask();
                 }
             }
         }
@@ -41,7 +45,10 @@ public class HttpTask {
         if (httpClient == null) {
             synchronized (HttpTask.class) {
                 if (httpClient == null) {
-                    httpClient = new OkHttpClient();
+                    SSLContext sslContext = new DefaultSSLProtocolSocketFactory().getSSLContext();
+                    httpClient = new OkHttpClient.Builder()
+                            .sslSocketFactory(sslContext.getSocketFactory())
+                            .build();
 //                    httpClient.networkInterceptors().add(new StethoInterceptor());
                 }
             }
