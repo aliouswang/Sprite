@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import rx.Observable;
 
 /**
  * Created by Administrator on 2016/1/12 0012.
@@ -74,7 +75,23 @@ public class HttpTask {
             e.printStackTrace();
             callback.onFailure(request, new IOException(e.toString()));
         }
+    }
 
+    public Observable<String> get(String url) {
+        Request.Builder builder = new Request.Builder()
+                .url(url);
+        Request request = builder.build();
+        String result = "";
+        try {
+            Response response = getHttpClientInstance().newCall(request).execute();
+            if (response.isSuccessful()) {
+                result = response.body().string();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            return Observable.just(result);
+        }
     }
 
     public void asyncGet(String url, Callback callback) {

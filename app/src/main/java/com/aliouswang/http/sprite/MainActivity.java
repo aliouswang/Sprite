@@ -4,20 +4,14 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
-import com.alibaba.fastjson.JSON;
-import com.aliouswang.http.sprite.model.Pojo;
 import com.aliouswang.sprite.http.library.HttpTask;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,52 +43,53 @@ public class MainActivity extends AppCompatActivity {
 
     public void doHttpReqeust() throws Exception{
 
-        Map<String, Object> header = new HashMap<>();
-        header.put("user_id", 123);
-        header.put("pageSize", "1");
-        HttpTask.getInstance().
-                syncPost("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do", header, header, new Callback() {
+        Observable<String> task = HttpTask.getInstance()
+                .get("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do");
+        task.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
                     @Override
-                    public void onFailure(Request request, IOException e) {
-                        Log.e("sprite", e.toString());
+                    public void onCompleted() {
+
                     }
 
                     @Override
-                    public void onResponse(Response response) throws IOException {
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Unexpected code " + response);
-                        }
+                    public void onError(Throwable e) {
 
-//                        Log.e("sprite", response.body().string());
+                    }
 
-                        String jsonString = response.body().string();
-                        Pojo pojo = JSON.parseObject(jsonString, Pojo.class);
-                        if (pojo == null) {
+                    @Override
+                    public void onNext(String s) {
+                        if (s == null) {
 
                         }
                     }
                 });
 
-//        OkHttpClient client = new OkHttpClient();
+//        Map<String, Object> header = new HashMap<>();
+//        header.put("user_id", 123);
+//        header.put("pageSize", "1");
+//        HttpTask.getInstance().
+//                syncPost("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do", header, header, new Callback() {
+//                    @Override
+//                    public void onFailure(Request request, IOException e) {
+//                        Log.e("sprite", e.toString());
+//                    }
 //
-//        Request request = new Request.Builder()
-//                .url("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do")
-//                .build();
+//                    @Override
+//                    public void onResponse(Response response) throws IOException {
+//                        if (!response.isSuccessful()) {
+//                            throw new IOException("Unexpected code " + response);
+//                        }
 //
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Request request, IOException e) {
-//                e.printStackTrace();
-//            }
+////                        Log.e("sprite", response.body().string());
 //
-//            @Override
-//            public void onResponse(Response response) throws IOException {
-//                if (!response.isSuccessful()) {
-//                    throw new IOException("Unexpected code " + response);
-//                }
+//                        String jsonString = response.body().string();
+//                        Pojo pojo = JSON.parseObject(jsonString, Pojo.class);
+//                        if (pojo == null) {
 //
-//                Log.e("sprite", response.body().string());
-//            }
-//        });
+//                        }
+//                    }
+//                });
     }
 }
