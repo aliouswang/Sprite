@@ -98,7 +98,8 @@ public class TargetMethodInjector {
                 "        } catch (IOException e) {\n" +
                 "            e.printStackTrace();\n" +
                 "        } finally {\n" +
-                "            return Observable.just(result);\n" +
+                "               Pojo pojo = JSON.parseObject(result, Pojo.class);"   +
+                "            return Observable.just(pojo);\n" +
                 "        }");
         return sb.toString();
     }

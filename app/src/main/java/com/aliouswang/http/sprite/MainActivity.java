@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.alibaba.fastjson.JSON;
 import com.aliouswang.http.sprite.api.ApiService;
+import com.aliouswang.http.sprite.model.Pojo;
 import com.aliouswang.sprite.http.processor.annotation.InjectFactory;
 
 import rx.Observable;
@@ -45,14 +47,14 @@ public class MainActivity extends AppCompatActivity {
     public void doHttpReqeust() throws Exception{
 
         ApiService apiService = InjectFactory.inject(ApiService.class);
-        Observable<String> task =
+        Observable<Pojo> task =
                 apiService.getDecorateList("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do");
 
 //        Observable<String> task = HttpTask.getInstance()
 //                .get("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do");
         task.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Subscriber<Pojo>() {
                     @Override
                     public void onCompleted() {
 
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(String s) {
+                    public void onNext(Pojo s) {
                         if (s == null) {
 
                         }

@@ -38,6 +38,8 @@ public class TargetClassInjector {
                 "import okhttp3.RequestBody;\n" +
                 "import okhttp3.Response;\n" +
                 "import rx.Observable;\n");
+        builder.append("import com.aliouswang.http.sprite.model.Pojo;\n");
+        builder.append("import com.alibaba.fastjson.JSON;\n");
         builder.append("import java.io.IOException;\n");
 
         String action = this.isInterface ? "implements" : "extends";
