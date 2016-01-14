@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.aliouswang.sprite.http.library.HttpTask;
+import com.aliouswang.http.sprite.api.ApiService;
+import com.aliouswang.sprite.http.processor.annotation.InjectFactory;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -43,8 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void doHttpReqeust() throws Exception{
 
-        Observable<String> task = HttpTask.getInstance()
-                .get("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do");
+        ApiService apiService = InjectFactory.inject(ApiService.class);
+        Observable<String> task =
+                apiService.getDecorateList("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do");
+
+//        Observable<String> task = HttpTask.getInstance()
+//                .get("http://test.api.51jiabo.com:1080/hxjb/decoration/case/v1.0/list.do");
         task.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {

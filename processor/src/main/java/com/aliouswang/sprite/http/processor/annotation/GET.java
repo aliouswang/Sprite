@@ -5,8 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.PARAMETER)
-public @interface Name {
+/**
+ * Created by aliouswang on 16/1/14.
+ */
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.CLASS)
+public @interface GET {
     String value();
 }

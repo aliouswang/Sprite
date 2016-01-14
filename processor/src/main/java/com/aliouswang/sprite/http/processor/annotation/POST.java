@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Created by aliouswang on 16/1/12.
  */
 @Target({ElementType.METHOD})
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 public @interface POST {
     String value();
 }

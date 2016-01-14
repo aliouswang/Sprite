@@ -5,8 +5,10 @@ package com.aliouswang.sprite.http.processor.annotation;
  */
 public class InjectFactory {
 
+    public static final String INJECTOR_SUFFIX = "$$SpriteHttpInjector";
+
     public static <T> T inject(Class<T> type) {
-        String name = type.getCanonicalName() + "$$HTTPREQUESTINJECTOR";
+        String name = type.getCanonicalName() + INJECTOR_SUFFIX;
         T obj = null;
         try {
             obj = (T)Class.forName(name).newInstance();
